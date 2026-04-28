@@ -1,59 +1,191 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Taquillera Coomotor
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema web de gestión de taquilla para la empresa de transporte Coomotor. Permite administrar la flota de buses, programar viajes, vender tiquetes y generar reportes operativos y financieros.
 
-## About Laravel
+## Stack tecnológico
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Backend:** PHP 8.2 + Laravel 12
+- **Base de datos:** MySQL (nombre: `taquilla_coomotor`)
+- **Frontend:** Blade + CSS personalizado (sin framework CSS externo)
+- **Servidor local:** XAMPP
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requisitos
 
-## Learning Laravel
+- PHP >= 8.2
+- Composer
+- MySQL
+- XAMPP (o cualquier servidor Apache + MySQL)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Instalación
 
-## Laravel Sponsors
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/SergioMaje/Taquillera.git
+cd Taquillera
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# 2. Instalar dependencias PHP
+composer install
 
-### Premium Partners
+# 3. Configurar el entorno
+cp .env.example .env
+php artisan key:generate
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Editar `.env` con los datos de la base de datos:
 
-## Contributing
+```env
+DB_DATABASE=taquilla_coomotor
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+# 4. Crear la base de datos y ejecutar migraciones
+php artisan migrate
 
-## Code of Conduct
+# 5. Crear el primer usuario administrador
+php artisan tinker
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```php
+// Dentro de tinker:
+App\Models\Usuario::create([
+    'nombre'   => 'Administrador',
+    'email'    => 'admin@coomotor.com',
+    'password' => bcrypt('tu_contraseña'),
+    'cedula'   => '000000000',
+    'rol'      => 'admin',
+]);
+```
 
-## Security Vulnerabilities
+```bash
+# 6. Levantar el servidor
+php artisan serve
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## Estructura de la base de datos
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+El sistema tiene 16 tablas organizadas en 5 grupos:
+
+```
+Geografía:   departamentos → municipios
+Flota:       tipos_bus → buses → asientos
+Viajes:      rutas → viajes → asientos_viaje
+Ventas:      usuarios → ordenes → tiquetes → pagos
+Auditoría:   auditoria
+```
+
+**Convenciones de BD:**
+- Todas las PKs son custom: `id_bus`, `id_viaje`, `id_tiquete`, etc.
+- Las tablas de negocio no usan `timestamps` de Laravel; solo `usuarios` tiene `fecha_registro`.
+- Las FKs usan `RESTRICT` para proteger el historial y `CASCADE` donde el borrado es seguro.
+
+---
+
+## Módulos del sistema
+
+### Flota
+
+**Tipos de bus** (`/tipos-bus`)  
+Define las plantillas de bus: nombre, número de columnas izquierda/derecha, si es doble piso y capacidad por defecto.
+
+**Buses** (`/buses`)  
+Registra cada unidad física con su placa, tipo, propietario y capacidad. Al crear un bus se generan automáticamente los asientos en grilla según la configuración del tipo de bus.  
+Los buses con tiquetes vendidos no se eliminan — se dan de baja (`activo = false`) para preservar el historial. Se pueden reactivar desde la pestaña "Dados de baja".
+
+**Propietarios** (`/propietarios`)  
+Personas naturales o jurídicas dueñas de los buses.
+
+**Conductores** (`/conductores`)  
+Conductores asignables a viajes.
+
+### Operación
+
+**Rutas** (`/rutas`)  
+Define origen y destino (municipio a municipio). Base para programar viajes.
+
+**Viajes** (`/viajes`)  
+Programa un viaje asignando ruta, bus, conductor, fecha, hora y precio. Al crear un viaje se generan automáticamente los registros de `asientos_viaje` (uno por cada asiento del bus) con estado `libre`.  
+Estados posibles: `programado` → `en_ruta` → `completado` / `cancelado`.  
+Los costos adicionales del viaje (peajes, combustible, etc.) se registran en `costos_viaje`.
+
+### Taquilla
+
+**Taquilla** (`/taquilla/{viaje}`)  
+Vista principal de venta. Muestra el mapa visual del bus con cada asiento coloreado según su estado (libre/ocupado). Al seleccionar un asiento libre y confirmar la compra, el sistema crea una `Orden`, un `Tiquete` y actualiza el `AsientoViaje` a `ocupado`.
+
+**Tiquetes** (`/tiquetes`)  
+Listado de todos los tiquetes vendidos con datos del pasajero, viaje y precio.
+
+### Reportes
+
+Disponibles en `/reportes`:
+
+| Reporte | Descripción |
+|---|---|
+| Viajes del día | Ocupación de cada viaje filtrable por fecha |
+| Manifiesto | Lista de pasajeros de un viaje específico |
+| Ventas | Tiquetes vendidos en un rango de fechas |
+| Ingresos por ruta | Total recaudado agrupado por ruta |
+| Ingresos por período | Evolución de ingresos en el tiempo |
+| Viajes cancelados | Historial de viajes no realizados |
+| Utilidad por viaje | Ingresos menos costos registrados |
+
+---
+
+## Estructura de archivos relevante
+
+```
+app/
+├── Http/Controllers/
+│   ├── Auth/LoginController.php     # Autenticación sesión
+│   ├── BusController.php            # CRUD buses + soft delete
+│   ├── ViajeController.php          # CRUD viajes + cancelar/completar
+│   ├── TaquillaController.php       # Mapa de asientos + venta
+│   ├── TiqueteController.php        # Listado tiquetes
+│   ├── ReporteController.php        # 7 reportes operativos/financieros
+│   ├── TipoBusController.php        # CRUD tipos de bus
+│   ├── RutaController.php           # CRUD rutas
+│   ├── ConductorController.php      # CRUD conductores
+│   ├── PropietarioController.php    # CRUD propietarios
+│   └── CostoViajeController.php     # Costos adicionales por viaje
+├── Models/                          # 16 modelos Eloquent
+│   ├── Bus.php                      # scope activos()
+│   ├── Viaje.php
+│   ├── Tiquete.php
+│   └── ...
+database/
+├── migrations/                      # 20 migraciones en orden cronológico
+resources/views/
+├── layouts/app.blade.php            # Layout principal con nav
+├── buses/
+├── viajes/
+├── taquilla.blade.php               # Mapa visual del bus
+├── tiquetes/
+└── reportes/
+routes/
+└── web.php                          # Todas las rutas protegidas con auth
+```
+
+---
+
+## Autenticación
+
+El sistema usa sesiones nativas de Laravel. Todas las rutas están protegidas con el middleware `auth`. No hay roles diferenciados en esta versión — cualquier usuario registrado tiene acceso completo.
+
+El modelo de autenticación es `App\Models\Usuario` con tabla `usuarios` (alias de `User`).
+
+---
+
+## Decisiones de diseño notables
+
+- **Sin soft deletes de Laravel:** Se implementó soft delete manual con campo `activo` en `buses` para mantener control explícito y compatibilidad con las FKs existentes.
+- **Asientos generados automáticamente:** Al crear un bus o un viaje, los asientos/asientos_viaje se crean por código, no manualmente, garantizando consistencia.
+- **FKs con RESTRICT en historial:** Las relaciones hacia tiquetes usan `RESTRICT` para que la BD sea la última línea de defensa contra borrados accidentales de historial.
+- **Sin timestamps en tablas de negocio:** Solo `usuarios` tiene `fecha_registro`; el resto omite `created_at`/`updated_at` para mantener el esquema limpio.
