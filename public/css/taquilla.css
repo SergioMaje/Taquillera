@@ -1,0 +1,302 @@
+/* ── Stepper ── */
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 32px;
+}
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+.step-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid #d1d5db;
+    background: #fff;
+    color: #9ca3af;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+}
+.step.active .step-circle {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    color: #fff;
+}
+.step.done .step-circle {
+    background: #e0e7ff;
+    border-color: #1d4ed8;
+    color: #1d4ed8;
+}
+.step-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #9ca3af;
+    text-transform: uppercase;
+}
+.step.active .step-label { color: #1d4ed8; }
+.step.done  .step-label  { color: #6b7280; }
+.step-connector {
+    width: 60px; height: 2px;
+    background: #e5e7eb;
+    margin-bottom: 22px;
+}
+.step-connector.done { background: #1d4ed8; }
+
+/* ── Layout 2 columnas ── */
+.seat-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+    align-items: start;
+}
+
+/* ── Panel izquierdo ── */
+.bus-panel {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+}
+.bus-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.bus-panel-header h2 { font-size: 1.1rem; font-weight: 700; color: #111827; }
+.legend { display: flex; gap: 16px; font-size: 0.8rem; color: #6b7280; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    border: 2px solid #d1d5db;
+}
+.legend-dot.disponible  { background: #fff; }
+.legend-dot.ocupado     { background: #d1d5db; border-color: #d1d5db; }
+.legend-dot.seleccionado{ background: #1d4ed8; border-color: #1d4ed8; }
+
+/* ── Bus body ── */
+.bus-body {
+    background: #f8fafc;
+    border-radius: 40px;
+    border: 2px solid #e5e7eb;
+    padding: 20px 30px 30px;
+    max-width: 320px;
+    margin: 0 auto;
+}
+.driver-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #d1d5db;
+}
+.driver-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+}
+
+/* Grid dinámico (grid-template-columns definido inline por tipo de bus) */
+.seats-grid { display: flex; flex-direction: column; gap: 10px; }
+.seat-row {
+    display: grid;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Doble piso */
+.floor-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+.floor-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0 12px;
+    color: #9ca3af;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.floor-divider::before,
+.floor-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+}
+
+/* Asiento */
+.silla {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    border: 2px solid #d1d5db;
+    background: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: all 0.15s;
+}
+.silla.disponible { cursor: pointer; }
+.silla.disponible:hover {
+    border-color: #1d4ed8;
+    color: #1d4ed8;
+    background: #eff6ff;
+}
+.silla.ocupado {
+    background: #d1d5db;
+    border-color: #d1d5db;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+.silla.seleccionado {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    color: #fff;
+}
+.silla.vacio {
+    background: transparent;
+    border: none;
+    pointer-events: none;
+}
+
+/* ── Extras del bus (baño, TV) ── */
+.bus-extras-row {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px dashed #d1d5db;
+}
+.bus-extras-top {
+    margin-top: 0;
+    margin-bottom: 14px;
+    padding-top: 0;
+    border-top: none;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #d1d5db;
+}
+.bus-extra-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 1.3rem;
+}
+.bus-extra-item span {
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Asiento estático (vista show del bus) */
+.silla-static {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    border: 2px solid var(--seat-color, #d1d5db);
+    background: var(--seat-bg, #fff);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+/* ── Panel derecho: resumen ── */
+.summary-panel {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    position: sticky;
+    top: 20px;
+}
+.summary-panel h3 { font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: 20px; }
+
+.summary-route {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid #f3f4f6;
+}
+.route-point { display: flex; align-items: flex-start; gap: 12px; }
+.route-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    margin-top: 4px; flex-shrink: 0;
+}
+.route-dot.from { background: #1d4ed8; }
+.route-dot.to   { border: 2px solid #9ca3af; background: #fff; }
+.rp-label  { font-size: 0.7rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; }
+.rp-city   { font-size: 0.95rem; font-weight: 700; color: #111827; }
+.rp-time   { font-size: 0.8rem; color: #6b7280; }
+
+.summary-details {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid #f3f4f6;
+}
+.summary-row { display: flex; justify-content: space-between; font-size: 0.85rem; }
+.summary-row .key { color: #6b7280; }
+.summary-row .val { font-weight: 600; color: #111827; }
+.summary-row .val.blue { color: #1d4ed8; }
+
+.total-section { margin-bottom: 20px; }
+.total-label { font-size: 0.7rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.total-price { font-size: 2rem; font-weight: 700; color: #111827; }
+.total-taxes { font-size: 0.75rem; color: #9ca3af; margin-top: 2px; }
+
+#btn-confirmar {
+    display: none;
+    width: 100%;
+    padding: 14px;
+    background: #1d4ed8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+#btn-confirmar:hover { background: #1e40af; }
+#btn-placeholder {
+    width: 100%;
+    padding: 14px;
+    background: #f3f4f6;
+    color: #9ca3af;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: not-allowed;
+    text-align: center;
+}
