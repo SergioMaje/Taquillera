@@ -5,11 +5,21 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\PermissionSeeder;
+use Database\Seeders\RolePermissionSeeder;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call([
+            RoleSeeder::class,
+            PermissionSeeder::class,
+            RolePermissionSeeder::class,
+        ]);
+
         // 1. Tipo de bus
         $tipoBusId = DB::table('tipos_bus')->insertGetId([
             'nombre'      => 'Ejecutivo',
@@ -102,9 +112,27 @@ class DatabaseSeeder extends Seeder
 
         // 10. Usuario de prueba
         DB::table('usuarios')->insert([
+            'nombre'   => 'Administrador',
+            'email'    => 'Admin@coomotor.com',
+            'password' => Hash::make('********'),
+        ]);
+
+        DB::table('usuarios')->insert([
             'nombre'   => 'Taquillero',
             'email'    => 'taquilla@coomotor.com',
-            'password' => Hash::make('taquilla123'),
+            'password' => Hash::make('********'),
+        ]);
+
+        // 11. permisos
+        DB::table('model_has_roles')->insert([
+            'role_id'   => '1',
+            'model_type'    => 'App\Models\Usuario',
+            'model_id' => '1',
+        ]);
+        DB::table('model_has_roles')->insert([
+            'role_id'   => '2',
+            'model_type'    => 'App\Models\Usuario',
+            'model_id' => '2',
         ]);
     }
 }

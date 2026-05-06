@@ -311,14 +311,18 @@
             <form method="POST" action="{{ route('viajes.completar', $viaje->id_viaje) }}"
                   onsubmit="return confirm('¿Marcar este viaje como completado? Ya no se podrán vender tiquetes.')">
                 @csrf @method('PATCH')
-                <button type="submit" class="btn-complete-trip">Completar Viaje</button>
+                @can('viajes.completar')
+                    <button type="submit" class="btn-complete-trip">Completar Viaje</button>
+                @endcan
             </form>
             <form method="POST" action="{{ route('viajes.cancelar', $viaje->id_viaje) }}"
                   onsubmit="return confirm('¿Cancelar este viaje? Esta acción no se puede deshacer.')">
                 @csrf @method('PATCH')
-                <button type="submit" class="btn-cancel-trip" style="width:100%;">
-                    Cancelar Viaje
-                </button>
+                @can('viajes.cancelar')
+                    <button type="submit" class="btn-cancel-trip" style="width:100%;">
+                        Cancelar Viaje
+                    </button>
+                @endcan
             </form>
         @elseif($viaje->estado === 'en_ruta')
             <a href="{{ route('viajes.show', $viaje->id_viaje) }}"
