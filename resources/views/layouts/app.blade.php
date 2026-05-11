@@ -243,59 +243,75 @@
 
         <div class="sidebar-section">Gestión</div>
 
+        @can('viajes.ver')
         <a href="{{ route('viajes.index') }}"
-           class="nav-item {{ request()->routeIs('viajes.*') ? 'active' : '' }}">
+        class="nav-item {{ request()->routeIs('viajes.*') ? 'active' : '' }}">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-8 2s0-1 3-3zm-2.71 8.15-1.29-1.29A3.93 3.93 0 0 1 15 12a4 4 0 0 1-8 0 4 4 0 0 1 4-4 3.93 3.93 0 0 1 2.86 1.29L12.57 10.6A2 2 0 0 0 11 10a2 2 0 0 0 0 4 2 2 0 0 0 1.57-.69z"/></svg>
             Viajes
         </a>
+        @endcan
 
+        @can('tiquetes.ver')
         <a href="{{ route('tiquetes.index') }}"
-           class="nav-item {{ request()->routeIs('tiquetes.*') ? 'active' : '' }}">
+        class="nav-item {{ request()->routeIs('tiquetes.*') ? 'active' : '' }}">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 10V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v4c1.1 0 2 .9 2 2s-.9 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2zm-2-1.46A4 4 0 0 0 18 12a4 4 0 0 0 2 3.46V18H4v-2.54A4 4 0 0 0 6 12a4 4 0 0 0-2-3.46V6h16v2.54zM11 15h2v2h-2zm0-4h2v2h-2zm0-4h2v2h-2z"/></svg>
             Tiquetes
         </a>
+        @endcan
 
+        @can('rutas.ver')
         <a href="{{ route('rutas.index') }}"
-           class="nav-item {{ request()->routeIs('rutas.*') ? 'active' : '' }}">
+        class="nav-item {{ request()->routeIs('rutas.*') ? 'active' : '' }}">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9 1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg>
             Rutas
         </a>
+        @endcan
 
         <div class="sidebar-section">Flota</div>
 
+        @can('buses.ver')
         <a href="{{ route('buses.index') }}"
-           class="nav-item {{ request()->routeIs('buses.*') ? 'active' : '' }}">
+        class="nav-item {{ request()->routeIs('buses.*') ? 'active' : '' }}">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V7H4v9zm10-7h2v2h-2V9zm0 4h2v2h-2v-2zm-4-4h2v2h-2V9zm0 4h2v2h-2v-2zm-4-4h2v2H6V9zm0 4h2v2H6v-2zM20 4H4L2 7h20l-2-3z"/></svg>
             Buses
         </a>
+        @endcan
 
+        @can('tipos_bus.ver')
         <a href="{{ route('tipos-bus.index') }}"
-           class="nav-item {{ request()->routeIs('tipos-bus.*') ? 'active' : '' }}">
+        class="nav-item {{ request()->routeIs('tipos-bus.*') ? 'active' : '' }}">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
             Tipos de Bus
         </a>
+        @endcan
 
         <div class="sidebar-section">Reportes</div>
 
+        @can('reportes.ver')
         <a href="{{ route('reportes.index') }}"
-           class="nav-item {{ request()->routeIs('reportes.*') ? 'active' : '' }}">
+        class="nav-item {{ request()->routeIs('reportes.*') ? 'active' : '' }}">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
             Reportes
         </a>
+        @endcan
 
         <div class="sidebar-section">Personal</div>
 
+        @can('conductores.ver')
         <a href="{{ route('conductores.index') }}"
-           class="nav-item {{ request()->routeIs('conductores.*') ? 'active' : '' }}">
+        class="nav-item {{ request()->routeIs('conductores.*') ? 'active' : '' }}">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             Conductores
         </a>
+        @endcan
 
+        @can('propietarios.ver')
         <a href="{{ route('propietarios.index') }}"
-           class="nav-item {{ request()->routeIs('propietarios.*') ? 'active' : '' }}">
+        class="nav-item {{ request()->routeIs('propietarios.*') ? 'active' : '' }}">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
             Propietarios
         </a>
+        @endcan
 
         <div class="sidebar-footer">
             <form method="POST" action="{{ route('logout') }}">
