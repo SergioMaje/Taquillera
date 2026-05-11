@@ -134,25 +134,6 @@
                 @endif
             </div>
 
-            <div class="form-group">
-                <label for="id_tipo_asiento">Tipo de Asiento</label>
-                <select name="id_tipo_asiento" id="id_tipo_asiento"
-                    class="{{ $errors->has('id_tipo_asiento') ? 'is-invalid' : '' }}">
-                    <option value="">— Seleccione tipo de asiento —</option>
-                    @foreach($tiposAsiento as $tipoA)
-                        <option value="{{ $tipoA->id_tipo_asiento }}"
-                            {{ old('id_tipo_asiento') == $tipoA->id_tipo_asiento ? 'selected' : '' }}>
-                            {{ $tipoA->codigo }}{{ $tipoA->descripcion ? ' — ' . $tipoA->descripcion : '' }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('id_tipo_asiento') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                @if($tiposAsiento->isEmpty())
-                    <div class="form-hint" style="color:#ef4444;">
-                        No hay tipos de asiento registrados en la base de datos.
-                    </div>
-                @endif
-            </div>
         </div>
 
         <hr class="divider">

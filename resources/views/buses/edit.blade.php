@@ -122,22 +122,6 @@
                 @error('id_tipo_bus') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>
 
-            <div class="form-group">
-                <label for="id_tipo_asiento">Tipo de Asiento</label>
-                <select name="id_tipo_asiento" id="id_tipo_asiento"
-                    class="{{ $errors->has('id_tipo_asiento') ? 'is-invalid' : '' }}">
-                    <option value="">— Seleccione tipo de asiento —</option>
-                    @foreach($tiposAsiento as $tipoA)
-                        @php $currentTipo = $bus->asientos->first()?->id_tipo_asiento; @endphp
-                        <option value="{{ $tipoA->id_tipo_asiento }}"
-                            {{ old('id_tipo_asiento', $currentTipo) == $tipoA->id_tipo_asiento ? 'selected' : '' }}>
-                            {{ $tipoA->codigo }}{{ $tipoA->descripcion ? ' — ' . $tipoA->descripcion : '' }}
-                        </option>
-                    @endforeach
-                </select>
-                <div class="form-hint">Solo se aplica si se regeneran los asientos.</div>
-                @error('id_tipo_asiento') <div class="invalid-feedback">{{ $message }}</div> @enderror
-            </div>
         </div>
 
         <hr class="divider">

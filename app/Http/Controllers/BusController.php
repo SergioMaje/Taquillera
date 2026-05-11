@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Bus;
 use App\Models\TipoBus;
-use App\Models\TipoAsiento;
 use App\Models\Asiento;
 use App\Models\Propietario;
 use Illuminate\Http\Request;
@@ -28,19 +27,17 @@ class BusController extends Controller
     public function create()
     {
         $tiposBus     = TipoBus::all();
-        $tiposAsiento = TipoAsiento::all();
         $propietarios = Propietario::orderBy('nombre')->get();
-        return view('buses.create', compact('tiposBus', 'tiposAsiento', 'propietarios'));
+        return view('buses.create', compact('tiposBus', 'propietarios'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'placa'            => 'required|string|max:20|unique:buses,placa',
-            'id_tipo_bus'      => 'required|exists:tipos_bus,id_tipo_bus',
-            'id_propietario'   => 'required|exists:propietarios,id_propietario',
-            'capacidad'        => 'required|integer|min:1|max:80',
-            'id_tipo_asiento'  => 'required|exists:tipos_asiento,id_tipo_asiento',
+            'placa'          => 'required|string|max:20|unique:buses,placa',
+            'id_tipo_bus'    => 'required|exists:tipos_bus,id_tipo_bus',
+            'id_propietario' => 'required|exists:propietarios,id_propietario',
+            'capacidad'      => 'required|integer|min:1|max:80',
         ]);
 
         $bus = Bus::create([
@@ -51,7 +48,7 @@ class BusController extends Controller
         ]);
 
         $bus->load('tipoBus');
-        $this->crearAsientos($bus, $request->capacidad, $request->id_tipo_asiento);
+        $this->crearAsientos($bus, $request->capacidad);
 
         return redirect()->route('buses.index')
             ->with('success', "Bus {$bus->placa} creado con {$request->capacidad} asientos.");
@@ -67,19 +64,17 @@ class BusController extends Controller
     {
         $bus->load('asientos');
         $tiposBus     = TipoBus::all();
-        $tiposAsiento = TipoAsiento::all();
         $propietarios = Propietario::orderBy('nombre')->get();
-        return view('buses.edit', compact('bus', 'tiposBus', 'tiposAsiento', 'propietarios'));
+        return view('buses.edit', compact('bus', 'tiposBus', 'propietarios'));
     }
 
     public function update(Request $request, Bus $bus)
     {
         $request->validate([
-            'placa'           => 'required|string|max:20|unique:buses,placa,' . $bus->id_bus . ',id_bus',
-            'id_tipo_bus'     => 'required|exists:tipos_bus,id_tipo_bus',
-            'id_propietario'  => 'required|exists:propietarios,id_propietario',
-            'capacidad'       => 'required|integer|min:1|max:80',
-            'id_tipo_asiento' => 'required|exists:tipos_asiento,id_tipo_asiento',
+            'placa'          => 'required|string|max:20|unique:buses,placa,' . $bus->id_bus . ',id_bus',
+            'id_tipo_bus'    => 'required|exists:tipos_bus,id_tipo_bus',
+            'id_propietario' => 'required|exists:propietarios,id_propietario',
+            'capacidad'      => 'required|integer|min:1|max:80',
         ]);
 
         $capacidadAnterior = $bus->capacidad;
@@ -94,7 +89,7 @@ class BusController extends Controller
         if ($request->capacidad != $capacidadAnterior) {
             $bus->asientos()->delete();
             $bus->load('tipoBus');
-            $this->crearAsientos($bus, $request->capacidad, $request->id_tipo_asiento);
+            $this->crearAsientos($bus, $request->capacidad);
         }
 
         return redirect()->route('buses.index')
@@ -132,7 +127,7 @@ class BusController extends Controller
             ->with('success', "Bus {$bus->placa} reactivado.");
     }
 
-    private function crearAsientos(Bus $bus, int $capacidad, int $idTipoAsiento): void
+    private function crearAsientos(Bus $bus, int $capacidad): void
     {
         $tipoBus  = $bus->tipoBus;
         $colIzq   = $tipoBus->columnas_izquierda;
@@ -168,7 +163,7 @@ class BusController extends Controller
                     'pos_x'           => $posXMap[$colIndex],
                     'pos_y'           => $fila,
                     'piso'            => $piso,
-                    'id_tipo_asiento' => $idTipoAsiento,
+                    'id_tipo_asiento' => null,
                 ]);
                 $numero++;
             }
